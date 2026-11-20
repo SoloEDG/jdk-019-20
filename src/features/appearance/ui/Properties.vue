@@ -15,12 +15,16 @@ import { colors } from "../lib/colors";
           type="color"
           :value="active.fill === 'none' ? '#ffffff' : active.fill"
           @input="style('fill', ($event.target as HTMLInputElement).value)"
+          @change="
+            style('fill', ($event.target as HTMLInputElement).value, true)
+          "
       /></label>
       <div class="swatches">
         <button
           v-for="c in colors"
+          :key="c"
           :style="{ background: c }"
-          @click="style('fill', c)"
+          @click="style('fill', c, true)"
         ></button>
       </div>
       <label
@@ -29,8 +33,9 @@ import { colors } from "../lib/colors";
           aria-label="Stroke"
           type="color"
           :value="active.stroke"
-          @input="
-            style('stroke', ($event.target as HTMLInputElement).value)
+          @input="style('stroke', ($event.target as HTMLInputElement).value)"
+          @change="
+            style('stroke', ($event.target as HTMLInputElement).value, true)
           " /></label
       ><label
         >Weight
@@ -39,8 +44,9 @@ import { colors } from "../lib/colors";
           min="0"
           max="30"
           :value="active.width"
-          @input="
-            style('width', +($event.target as HTMLInputElement).value)
+          @input="style('width', +($event.target as HTMLInputElement).value)"
+          @change="
+            style('width', +($event.target as HTMLInputElement).value, true)
           " /></label
       ><label
         >Opacity
@@ -52,6 +58,9 @@ import { colors } from "../lib/colors";
           step=".01"
           :value="active.opacity"
           @input="style('opacity', +($event.target as HTMLInputElement).value)"
+          @change="
+            style('opacity', +($event.target as HTMLInputElement).value, true)
+          "
       /></label>
       <h4>PATH DETAILS</h4>
       <p>{{ active.nodes.length }} anchor points</p>
@@ -61,7 +70,7 @@ import { colors } from "../lib/colors";
           type="checkbox"
           :checked="active.closed"
           @change="
-            style('closed', ($event.target as HTMLInputElement).checked)
+            style('closed', ($event.target as HTMLInputElement).checked, true)
           " /></label
     ></template>
     <p v-else>Select an object to edit its appearance.</p>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { beginEdit } from "../../drawing";
+import { beginEdit, endEdit } from "../../drawing";
 
 import { doc } from "../../../shared/document";
 import { move } from "../model/move";
@@ -7,19 +7,20 @@ import { coordinates } from "../lib/coordinates";
 import type { Node } from "../../../shared/types";
 function drag(e: PointerEvent, n: Node, kind: string) {
   e.stopPropagation();
-  beginEdit();
+  beginEdit("node-drag", { message: "Edit path" });
   const svg = (e.target as SVGElement).ownerSVGElement!;
   const f = (ev: PointerEvent) => {
     const p = coordinates(ev, svg);
     if (kind === "anchor") move(n, p);
     else Object.assign(kind === "in" ? n.in : n.out, p);
   };
+  const stop = () => {
+    window.removeEventListener("pointermove", f);
+    endEdit("node-drag", "Edit path");
+  };
   window.addEventListener("pointermove", f);
-  window.addEventListener(
-    "pointerup",
-    () => window.removeEventListener("pointermove", f),
-    { once: true },
-  );
+  window.addEventListener("pointerup", stop, { once: true });
+  window.addEventListener("pointercancel", stop, { once: true });
 }
 </script>
 <template>
